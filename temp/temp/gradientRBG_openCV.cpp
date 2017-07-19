@@ -6,7 +6,7 @@
 using namespace cv;
 using namespace std;
 
-void createAlphaMat(Mat &mat)
+void createMat(Mat &mat,bool Alpha)
 {
 	uchar startA = 255;
 	uchar startR = 255;
@@ -37,6 +37,7 @@ void createAlphaMat(Mat &mat)
 			rgba[0] = saturate_cast<uchar>(pow(B / UCHAR_MAX, 1 / 2.2) * UCHAR_MAX);
 			rgba[1] = saturate_cast<uchar>(pow(G / UCHAR_MAX, 1 / 2.2) * UCHAR_MAX);
 			rgba[2] = saturate_cast<uchar>(pow(R / UCHAR_MAX, 1 / 2.2) * UCHAR_MAX);
+			rgba[3] = Alpha ? A : UCHAR_MAX;
 			rgba[3] = A ;
 
 			if (i+1 >= n_top)
@@ -44,35 +45,42 @@ void createAlphaMat(Mat &mat)
 				R += dR;
 				G += dG;
 				B += dB;
-				A += dA;
+				if(Alpha)
+					A += dA;
 				n_top += n_row;
 			}
 		}
 	}
 }
 
-int main(int argv, char **argc)
-{
-	// Create mat with alpha channel
-	Mat mat(512, 1024, CV_8UC4);
-	createAlphaMat(mat);
-
-	vector<int> compression_params;
-	compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-	compression_params.push_back(9);
-
-	try {
-		imwrite("gradientRGBA.png", mat, compression_params);
-	}
-	catch (runtime_error& ex) {
-		fprintf(stderr, "Exception converting image to PNG format: %s\n", ex.what());
-		return 1;
-	}
-
-	namedWindow("gradientRGBA", CV_WINDOW_AUTOSIZE);
-	imshow("gradientRGBA", mat);
-	waitKey();
-
-	fprintf(stdout, "Saved PNG file with alpha data.\n");
-	return 0;
-}
+//int main(int argv, char **argc)
+//{
+//	// Create mat with alpha channel
+//	Mat mat(512, 1024, CV_8UC4);
+//	Mat matA(512, 1024, CV_8UC4);
+//	createMat(mat, false);
+//	createMat(matA,true);
+//
+//	vector<int> compression_params;
+//	compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+//	compression_params.push_back(9);
+//
+//	try {
+//		imwrite("gradientRGB.png", mat, compression_params);
+//		imwrite("gradientRGBA.png", matA, compression_params);
+//	}
+//	catch (runtime_error& ex) {
+//		fprintf(stderr, "Exception converting image to PNG format: %s\n", ex.what());
+//		return 1;
+//	}
+//
+//	namedWindow("gradientRGB", CV_WINDOW_AUTOSIZE);
+//	imshow("gradientRGB", mat);
+//
+//	namedWindow("gradientRGBA", CV_WINDOW_AUTOSIZE);
+//	imshow("gradientRGBA", matA);
+//	waitKey();
+//
+//	fprintf(stdout, "Saved PNG file with alpha data.\n");
+//	return 0;
+//}

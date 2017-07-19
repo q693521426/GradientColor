@@ -18,7 +18,7 @@
     <ClCompile Include="gradientRBG_openCV.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="gradientRGB.cpp">
+    <ClCompile Include="specialAdd.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
